@@ -1,0 +1,25 @@
+version: '3.1'
+services:
+    mysql:
+        image: 'mysql:8.0'
+        working_dir: /application
+        container_name: mysql
+        restart: always
+        volumes:
+            - '.:/application'
+            - /application/var
+        environment:
+            MYSQL_ROOT_PASSWORD: root-password
+            MYSQL_DATABASE: tidio
+            MYSQL_USER: username
+            MYSQL_PASSWORD: password
+        ports:
+            - '5001:3306'
+
+    php-fpm:
+        build: docker/php-fpm
+        working_dir: /application
+        volumes:
+            - '.:/application'
+            - './docker/php-fpm/php-ini-overrides.ini:/etc/php/8.0/fpm/conf.d/99-overrides.ini'
+            - /application/var
