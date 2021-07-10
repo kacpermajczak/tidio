@@ -1,8 +1,25 @@
-FROM phpdockerio/php80-fpm:latest
+FROM php:8.0-fpm
 WORKDIR "/application"
 
-RUN apt-get update; \
-    apt-get -y --no-install-recommends install \
-        php8.0-mysql; \
-    apt-get clean; \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
+# UPDATE
+RUN apt update
+
+# PACKAGES
+RUN apt-get install -y \
+        zip \
+        libzip-dev \
+        wget \
+        curl \
+        unzip \
+        libicu-dev
+
+#add intl for number_formatter used in money library
+RUN docker-php-ext-configure intl \
+    && docker-php-ext-install intl
+
+#add composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer
+
+#add bcmath for moneyphp/money library
+RUN docker-php-ext-install bcmath
+RUN docker-php-ext-install pdo_mysql

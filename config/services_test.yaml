@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        public: true
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Kernel.php'
+            - '../src/Tests/'
+        public: true
