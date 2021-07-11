@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine;
 
-use App\Application\Clock;
 use App\Application\PaymentReport\Department\DepartmentViewModel;
 use App\Application\PaymentReport\Employee\EmployeeViewModel;
 use App\Application\PaymentReport\PaymentReport;
@@ -23,7 +22,6 @@ final class ReportRepositoryUsingDbal implements ReportRepository
     use Mapping;
 
     private Connection $connection;
-    private Clock $clock;
     private SalaryAddonFactory $salaryAddonFactory;
 
     private array $mapFilters = [
@@ -35,11 +33,9 @@ final class ReportRepositoryUsingDbal implements ReportRepository
 
     public function __construct(
         Connection $connection,
-        Clock $clock,
         SalaryAddonFactory $salaryAddonFactory,
     ) {
         $this->connection = $connection;
-        $this->clock = $clock;
         $this->salaryAddonFactory = $salaryAddonFactory;
     }
 
@@ -66,7 +62,7 @@ final class ReportRepositoryUsingDbal implements ReportRepository
 
         $paymentReport = PaymentReport::createEmpty();
         foreach ($dbResult as $row) {
-            $salaryAddonCommand = CalculateSalaryAddon::fromArray($row, $this->clock->currentTime());
+            $salaryAddonCommand = CalculateSalaryAddon::fromArray($row);
             $salaryAddon = $this->salaryAddonFactory->create($salaryAddonCommand);
             $salaryAddonValue = $salaryAddon->calculate($salaryAddonCommand);
 

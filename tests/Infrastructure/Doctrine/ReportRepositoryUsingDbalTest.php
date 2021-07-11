@@ -24,7 +24,7 @@ final class ReportRepositoryUsingDbalTest extends KernelTestCase
         $clock->setCurrentDate('2021-01-01');
 
         $this->connection = $kernel->getContainer()->get('doctrine.dbal.default_connection');
-        $this->reportRepository = new ReportRepositoryUsingDbal($this->connection, $clock, new SalaryAddonFactory());
+        $this->reportRepository = new ReportRepositoryUsingDbal($this->connection, new SalaryAddonFactory($clock));
 
         $this->seedDepartments();
         $this->seedEmployees();
@@ -33,10 +33,10 @@ final class ReportRepositoryUsingDbalTest extends KernelTestCase
     /**
      * @dataProvider data
      */
-    public function test_generates_payment_report(array $filters, array $result): void
+    public function test_generates_payment_report(?string $key, ?string $value, array $result): void
     {
         // Given
-        $reportFilters = ReportFilter::create($filters);
+        $reportFilters = ReportFilter::create($key, $value);
 
         // When
         $report = $this->reportRepository->getPaymentReport($reportFilters);
@@ -49,16 +49,19 @@ final class ReportRepositoryUsingDbalTest extends KernelTestCase
     {
         return [
             'simply report'                 => [
-                'filters' => [],
-                'result'  => $this->report(),
+                'key'    => null,
+                'value'  => null,
+                'result' => $this->report(),
             ],
             'filter department name report' => [
-                'filters' => ['department_name' => 'Human Resources'],
-                'result'  => $this->filteredByDepartmentReport(),
+                'key'    => 'department_name',
+                'value'  => 'Human Resources',
+                'result' => $this->filteredByDepartmentReport(),
             ],
             'filter first name name report' => [
-                'filters' => ['first_name' => 'Adam'],
-                'result'  => $this->filteredByFirstNameReport(),
+                'key'    => 'first_name',
+                'value'  => 'Adam',
+                'result' => $this->filteredByFirstNameReport(),
             ],
         ];
     }

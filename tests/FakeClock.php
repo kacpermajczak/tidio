@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
-use App\Application\Clock;
+use App\SharedKernel\Clock;
 use Assert\Assert;
 use DateTimeImmutable;
 use DateTimeZone;

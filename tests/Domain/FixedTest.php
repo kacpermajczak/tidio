@@ -15,8 +15,8 @@ final class FixedTest extends TestCase
     public function testCalculatesFixedSalaryAddon(): void
     {
         // Given
-        $salaryAddon = new SalaryAddonFixed();
         $fakeClock = new FakeClock();
+        $salaryAddon = new SalaryAddonFixed($fakeClock);
         $fakeClock->setCurrentDate('2021-01-01');
         $command = CalculateSalaryAddon::fromArray(
             [
@@ -27,8 +27,7 @@ final class FixedTest extends TestCase
                 'date_of_employment'            => '2001-01-01',
                 'base_of_remuneration_value'    => '1000',
                 'base_of_remuneration_currency' => 'USD',
-            ],
-            $fakeClock->currentTime()
+            ]
         );
 
         // When

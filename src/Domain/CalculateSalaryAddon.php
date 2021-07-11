@@ -19,7 +19,6 @@ final class CalculateSalaryAddon
     private \DateTimeImmutable $dateOfEmployment;
     private float $baseOfRemunerationValue;
     private string $baseOfRemunerationCurrency;
-    private \DateTimeImmutable $now;
 
     private function __construct(
         string $addonType,
@@ -29,7 +28,6 @@ final class CalculateSalaryAddon
         \DateTimeImmutable $dateOfEmployment,
         float $baseOfRemunerationValue,
         string $baseOfRemunerationCurrency,
-        \DateTimeImmutable $now
     ) {
         $this->addonType = $addonType;
         $this->addonAmount = $addonAmount;
@@ -38,10 +36,9 @@ final class CalculateSalaryAddon
         $this->dateOfEmployment = $dateOfEmployment;
         $this->baseOfRemunerationValue = $baseOfRemunerationValue;
         $this->baseOfRemunerationCurrency = $baseOfRemunerationCurrency;
-        $this->now = $now;
     }
 
-    public static function fromArray(array $array, \DateTimeImmutable $now): self
+    public static function fromArray(array $array): self
     {
         Assert::that($array)->keyExists('salary_addon_type');
         Assert::that($array['salary_addon_type'])->inArray(SalaryAddonType::toArray());
@@ -66,7 +63,6 @@ final class CalculateSalaryAddon
             \DateTimeImmutable::createFromFormat('Y-m-d', $array['date_of_employment']),
             self::asFloat($array, 'base_of_remuneration_value'),
             self::asString($array, 'base_of_remuneration_currency'),
-            $now
         );
     }
 
@@ -103,10 +99,5 @@ final class CalculateSalaryAddon
     public function getBaseOfRemunerationCurrency(): string
     {
         return $this->baseOfRemunerationCurrency;
-    }
-
-    public function getCurrentTime(): \DateTimeImmutable
-    {
-        return $this->now;
     }
 }

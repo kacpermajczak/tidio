@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure;
 
-use App\Application\Clock;
+use App\SharedKernel\Clock;
 use DateTimeImmutable;
 use DateTimeZone;
 
